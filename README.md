@@ -1,13 +1,6 @@
 
 ### Questions
-* No questions....
-
-### Objectives
-YWBAT
-* Interpret Skewness and Kurtosis equations
-* define which parameters define specific distributions
-* Measure normality on a dataset
-* Define a poisson distribution 
+* Exponential Distribution Mean
 
 ### Key Takeaways
 * understand how parameters define distributions
@@ -28,66 +21,68 @@ import matplotlib.pyplot as plt
 
 ### What is/are a parameter(s)?
 From parameters we get an idea of how it looks
+Parameters define a distribution
 
-### Normal
-**Parameters**
-* $\mu$ - mean
-* $\sigma$ - standard deviation
+### Normal Distribution
+* Parameter(s)
+    * $\mu$ - mean
+    * $\sigma$ - standard deviation
 
-**Shape**
-* Bell curve
-
-
-**When**
-* Looking at populations or samples from a populations
-
-### Exponential Distributions
-**Parameter**
-* $\lambda$ - exponent - rate of decay/growth
-
-**Shape**
-* Exponential curve
-
-**When**
-* growth/decay
-* physics 
-* population
-* inflation
-
-### Poisson 
-Parameter
-* $\lambda$ - exponent - rate at k number events occur in some given time
-
-Example:
-* 15 people walk into a starbucks every 10 minutes between the hours of 6 am and 10 am.
-
-    * $\lambda\$ = 15people/10minute
-
-Shape
-* exponential curve
-
-When
-* Time Series ? 
-* counts over time
-* earthquakes in a month
-* floods in a month
-* number of teens that go viral on instagram per month
-* number of celebrities trending per day
-
+* Use Cases
+    * Almost all the time
+    * Populations/Samples
+        * Measure something on a population
+        
 ### Binomial Distribution
-Parameters
-* p = probability of success
-* q = (1 - p) probability of no success
+* Use Cases
+    * Coin Flips
+    * Win vs Lose
+    * This vs That
+    * 2 independent events with some number of trials 
+    
+* Parameter(s)
+    * $p$ - probability of success
+    * $n$ - number of trials
+    
+### Poisson Distribution
+* Use Cases
+    * Measuring the rate of an event over a time interval
+    * Event/Interval 
+    * Defective phones/1000 phones
 
-Example
-* Flipping a coin
-* Getting a match on a swipe
-* Getting a like on an interaction
-* Catching a fish
-* Winning on a lotto ticket
+* Parameters(s)
+    * $\lambda$ - rate of an event occuring
+
+### Exponential Distributionf
+* Use Cases
+    * Growth and decay
+    * How long until some event occurs
+    * How long until an event decays to some value
+
+* Parameters
+    * $\lambda$ - rate of growth/decay
+    
+
+### Uniform Distribution
+* Use Cases
+    * Rolling a Dice
+    * Picking a Card
+    * Anything that has 'fairness'
+
+* Parameters
+    * $n$ - number of fair events
 
 ### Let's get into Normal Distributions
 how do we measure normality?
+
+* Mean, Median, Mode being equal...hmmm...this is great for symmetry, but misses the bell curve
+* 65, 95, 99.7 test 1std, 2std, 3stds from the mean, checks the bell curve
+* Skewness....
+    * How well the data is distributed about the mean
+    * How 'centered' the data is
+    * which direction the data is stretched
+* Kurtosis....
+    * How fat/thin the tails are
 
 
 ```python
@@ -99,29 +94,53 @@ x.mean(), x.std()
 
 
 
-    (9.99, 5.816347651232688)
+    (8.77, 5.835846125456016)
 
 
 
 
 ```python
-plt.figure(figsize=(6, 6))
-plt.hist(x, label='x', alpha=0.5, bins=20)
-plt.vlines(x=x.mean(), ymin=0, ymax=12, colors='r', linestyle='dashed')
-plt.vlines(x=x.mean() + stats.kurtosis(x)*x.std(), ymin=0, ymax=12, colors='r', linestyle='dashed')
-plt.vlines(x=x.mean() - stats.kurtosis(x)*x.std(), ymin=0, ymax=12, colors='r', linestyle='dashed')
-plt.plot()
+ostd = x.mean() + x.std()
+mostd = x.mean() - x.std()
+tstd = x.mean() + 2*x.std()
+mtstd = x.mean() - 2*x.std()
+plt.grid()
+plt.hist(x, color='b', alpha=0.5, bins=20)
+plt.vlines(x=x.mean(), ymin=0, ymax=14, linestyle='dashed', colors='r', linewidth=2, label=str(x.mean()))
+plt.vlines(x=ostd, ymin=0, ymax=14, linestyle='dashed', colors='r', linewidth=2, label='1 std')
+plt.vlines(x=mostd, ymin=0, ymax=14, linestyle='dashed', colors='r', linewidth=2, label='-1 std')
+plt.vlines(x=tstd, ymin=0, ymax=14, linestyle='dashed', colors='r', linewidth=2, label='2 std')
+plt.vlines(x=mtstd, ymin=0, ymax=14, linestyle='dashed', colors='r', linewidth=2, label='-2 std')
+plt.legend()
+plt.show()
+```
+
+
+![png](lesson-plan_files/lesson-plan_7_0.png)
+
+
+
+```python
+stats.skew(x)
 ```
 
 
 
 
-    []
+    0.21313781521088626
 
 
 
 
-![png](lesson-plan_files/lesson-plan_12_1.png)
+```python
+stats.kurtosis(x, fisher=False)
+```
+
+
+
+
+    1.8182735276812516
+
 
 
 ### Measure the Skewness and Kurtosis
@@ -141,7 +160,7 @@ skew, kurtosis
 
 
 
-    (0.03834443137697264, 1.7922755476260055)
+    (0.21313781521088626, 1.8182735276812516)
 
 
 
@@ -170,7 +189,7 @@ for i in range(1, 5):
 
 
 
-    3.266654804578821
+    3.2557404002003785
 
 
 
@@ -178,14 +197,14 @@ for i in range(1, 5):
 
 
 ```python
-nx = np.random.normal(50, 10, 200)
+nx = np.random.normal(10, 2, 2000)
 nx.mean(), nx.std()
 ```
 
 
 
 
-    (51.24410762979849, 10.21525296996087)
+    (9.953785908122375, 2.039472779419996)
 
 
 
@@ -207,7 +226,7 @@ plt.plot()
 
 
 
-![png](lesson-plan_files/lesson-plan_20_1.png)
+![png](lesson-plan_files/lesson-plan_17_1.png)
 
 
 
@@ -220,8 +239,59 @@ skew, kurt
 
 
 
-    (0.08121339275464987, 2.6319063868223505)
+    (0.009360004854058976, 3.057127225592856)
 
+
+
+
+```python
+stats.jarque_bera(nx) # h0 : nx is normal
+```
+
+
+
+
+    (0.30116322228408987, 0.8602075246242011)
+
+
+
+
+```python
+# Zscores
+def zscore(arr):
+    return (arr - arr.mean())/arr.std()
+```
+
+
+```python
+nx1 = np.random.poisson(5, 1000)
+nx2 = np.random.normal(100, 8, 1000)
+```
+
+
+```python
+plt.figure(figsize=(8, 5))
+plt.grid(zorder=-1)
+plt.hist(nx1, bins=20, color='r', alpha=0.5)
+plt.hist(nx2, bins=20, color='b', alpha=0.5)
+plt.show()
+```
+
+
+![png](lesson-plan_files/lesson-plan_22_0.png)
+
+
+
+```python
+plt.figure(figsize=(8, 5))
+plt.grid(zorder=-1)
+plt.hist(zscore(nx2), bins=20, color='b', alpha=0.5)
+plt.hist(zscore(nx1), bins=20, color='r', alpha=0.5)
+plt.show()
+```
+
+
+![png](lesson-plan_files/lesson-plan_23_0.png)
 
 
 ### Assessment
